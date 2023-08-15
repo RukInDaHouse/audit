@@ -27,11 +27,13 @@ echo "Script will automatically gather the required info:"
 echo "The checklist can help you in the process of hardening your system:"
 echo "Note: it has been tested for Debian Linux Distro:"
 echo
-
 REPORT_TABLE_HEADER="<table>"$'\n'"<tr>"$'\n'"  <th>№</th>"$'\n'"  <th>Parametr</th>"$'\n'"  <th>Value</th>"$'\n'"</tr>"
 REPORT_TABLE_FOOTER="</table>"
+AUDIT_HEADER="MySQL"
+REPORT_PAGE_HEADER="<h1>"$AUDIT_HEADER"</h1>"
 touch report.html
 START=$(date +%s)
+AUDIT_HEADER="MySQL"
 cat > report.html << EOF
 <!DOCTYPE html>
 <style>
@@ -98,10 +100,36 @@ cat > report.html << EOF
         <title>Report</title>
     </head>
     <body>
-        <h1>Hello</h1>
-        $REPORT_TABLE_HEADER
-        $AUDIT_MYSQL_ENGINE
-        $REPORT_TABLE_FOOTER
+$REPORT_PAGE_HEADER
+$REPORT_TABLE_HEADER
+$AUDIT_MYSQL_VERSION
+$AUDIT_MYSQL_ENGINE
+$AUDIT_MYSQL_BASEDIR
+$AUDIT_MYSQL_DATADIR
+$AUDIT_MYSQL_TMPDIR
+$AUDIT_MYSQL_PORT
+$AUDIT_MYSQL_SOCKET
+$AUDIT_MYSQL_PID_FILE
+$AUDIT_MYSQL_BIND_ADDRESS
+$AUDIT_MYSQL_LOG_OUTPUT
+$AUDIT_MYSQL_GENERAL_LOG
+$AUDIT_MYSQL_ERROR_LOG
+$AUDIT_MYSQL_SLOW_LOG
+$AUDIT_MYSQL_RELAY_LOG
+$AUDIT_MYSQL_UNDO_LOG_SIZE
+$AUDIT_MYSQL_EXPIRE_LOGS_DAYS
+$AUDIT_MYSQL_BINLOG_FORMAT
+$AUDIT_MYSQL_FORCE_RECOVERY
+$AUDIT_MYSQL_READ_ONLY_STATUS
+$AUDIT_MYSQL_AUTH_PLUGIN
+$AUDIT_MYSQL_CHUNK_SIZE
+$AUDIT_MYSQL_BUFFER_POOL_SIZE
+$AUDIT_MYSQL_OPEN_FILES
+$AUDIT_MYSQL_BUFFER_POOL_FILENAME
+$AUDIT_MYSQL_BUFFER_POOL_DUMP
+$AUDIT_MYSQL_REPL_DELAY
+$AUDIT_MYSQL_PAGE_SIZE
+$REPORT_TABLE_FOOTER
         <div class="panel"></div>
     </body>
 </html>
