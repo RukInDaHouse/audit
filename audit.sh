@@ -93,59 +93,59 @@ AUDIT_PHP_MODULES=$(php -m)
 
 AUDIT_MYSQL_AVAILABILITY="1"
 # 01. Current MySQL Version
-AUDIT_MYSQL_VERSION="<tr>"$'\n'"  <th>01</th>"$'\n'"  <th>MySQL Version</th>"$'\n'"  <th>$(mysql -V)</th>"$'\n'"</tr>"
+AUDIT_MYSQL_VERSION="<tr>"$'\n'"  <td>01</td>"$'\n'"  <th>MySQL Version</th>"$'\n'"  <th>$(mysql -e "SHOW GLOBAL VARIABLES" |  grep "^version" | head -1)</th>"$'\n'"</tr>"
 # 02. Current MySQL Default Engine
-AUDIT_MYSQL_ENGINE="<tr>"$'\n'"  <th>02</th>"$'\n'"  <th>MySQL Default Engine</th>"$'\n'"  <th>$(mysql -e "SHOW GLOBAL VARIABLES" | grep "default_storage_engine" | awk '{print $2}')</th>"$'\n'"</tr>"
+AUDIT_MYSQL_ENGINE="<tr>"$'\n'"  <td>02</td>"$'\n'"  <th>MySQL Default Engine</th>"$'\n'"  <th>$(mysql -e "SHOW GLOBAL VARIABLES" | grep "default_storage_engine" | awk '{print $2}')</th>"$'\n'"</tr>"
 # 03. Current MySQL Basedir
-AUDIT_MYSQL_BASEDIR="<tr>"$'\n'"  <th>03</th>"$'\n'"  <th>MySQL Basedir</th>"$'\n'"  <th>$(mysql -e "SHOW GLOBAL VARIABLES" | grep "basedir" | awk '{print $2}')</th>"$'\n'"</tr>"
+AUDIT_MYSQL_BASEDIR="<tr>"$'\n'"  <td>03</td>"$'\n'"  <th>MySQL Basedir</th>"$'\n'"  <th>$(mysql -e "SHOW GLOBAL VARIABLES" | grep "basedir" | awk '{print $2}')</th>"$'\n'"</tr>"
 # 04. Current MySQL Datadir
-AUDIT_MYSQL_DATADIR="<tr>"$'\n'"  <th>04</th>"$'\n'"  <th>MySQL Datadir</th>"$'\n'"  <th>$(mysql -e "SHOW GLOBAL VARIABLES" | grep "datadir" | awk '{print $2}')</th>"$'\n'"</tr>"
+AUDIT_MYSQL_DATADIR="<tr>"$'\n'"  <td>04</td>"$'\n'"  <th>MySQL Datadir</th>"$'\n'"  <th>$(mysql -e "SHOW GLOBAL VARIABLES" | grep "datadir" | awk '{print $2}')</th>"$'\n'"</tr>"
 # 05. Current MySQL TMP Dir
-AUDIT_MYSQL_TMPDIR="<tr>"$'\n'"  <th>05</th>"$'\n'"  <th>MySQL TMP Dir</th>"$'\n'"  <th>$(mysql -e "SHOW GLOBAL VARIABLES" | grep "tmpdir" | awk '{print $2}')</th>"$'\n'"</tr>"
+AUDIT_MYSQL_TMPDIR="<tr>"$'\n'"  <td>05</td>"$'\n'"  <th>MySQL TMP Dir</th>"$'\n'"  <th>$(mysql -e "SHOW GLOBAL VARIABLES" | grep "^tmpdir" | awk '{print $2}')</th>"$'\n'"</tr>"
 # 06. Current MySQL Port
-AUDIT_MYSQL_PORT="<tr>"$'\n'"  <th>06</th>"$'\n'"  <th>MySQL Port</th>"$'\n'"  <th>$(mysql -e "SHOW GLOBAL VARIABLES" | grep -P "^port" | awk '{print $2}')</th>"$'\n'"</tr>"
+AUDIT_MYSQL_PORT="<tr>"$'\n'"  <td>06</td>"$'\n'"  <th>MySQL Port</th>"$'\n'"  <th>$(mysql -e "SHOW GLOBAL VARIABLES" | grep -P "^port" | awk '{print $2}')</th>"$'\n'"</tr>"
 # 07. Current MySQL Socket
-AUDIT_MYSQL_SOCKET="<tr>"$'\n'"  <th>07</th>"$'\n'"  <th>MySQL Socket</th>"$'\n'"  <th>$(mysql -e "SHOW GLOBAL VARIABLES" | grep -P "^socket" | awk '{print $2}')</th>"$'\n'"</tr>"
+AUDIT_MYSQL_SOCKET="<tr>"$'\n'"  <td>07</td>"$'\n'"  <th>MySQL Socket</th>"$'\n'"  <th>$(mysql -e "SHOW GLOBAL VARIABLES" | grep -P "^socket" | awk '{print $2}')</th>"$'\n'"</tr>"
 # 08. Current MySQL PID File
-AUDIT_MYSQL_PID_FILE="<tr>"$'\n'"  <th>08</th>"$'\n'"  <th>MySQL PID File</th>"$'\n'"  <th>$(mysql -e "SHOW GLOBAL VARIABLES" | grep "pid_file" | awk '{print $2}')</th>"$'\n'"</tr>"
+AUDIT_MYSQL_PID_FILE="<tr>"$'\n'"  <td>08</td>"$'\n'"  <th>MySQL PID File</th>"$'\n'"  <th>$(mysql -e "SHOW GLOBAL VARIABLES" | grep "pid_file" | awk '{print $2}')</th>"$'\n'"</tr>"
 # 09. Current MySQL Bind Address
-AUDIT_MYSQL_BIND_ADDRESS="<tr>"$'\n'"  <th>09</th>"$'\n'"  <th>MySQL Bind Address</th>"$'\n'"  <th>$(mysql -e "SHOW GLOBAL VARIABLES" | grep "bind_address" | awk '{print $2}')</th>"$'\n'"</tr>"
+AUDIT_MYSQL_BIND_ADDRESS="<tr>"$'\n'"  <td>09</td>"$'\n'"  <th>MySQL Bind Address</th>"$'\n'"  <th>$(mysql -e "SHOW GLOBAL VARIABLES" | grep "bind_address" | awk '{print $2}')</th>"$'\n'"</tr>"
 # 10. Current MySQL Log Output
-AUDIT_MYSQL_LOG_OUTPUT="<tr>"$'\n'"  <th>10</th>"$'\n'"  <th>MySQL Log Output</th>"$'\n'"  <th>"$(mysql -e "SHOW GLOBAL VARIABLES" | grep "log_output" | awk '{print $2}')"</th>"$'\n'"</tr>"
+AUDIT_MYSQL_LOG_OUTPUT="<tr>"$'\n'"  <td>10</td>"$'\n'"  <th>MySQL Log Output</th>"$'\n'"  <th>"$(mysql -e "SHOW GLOBAL VARIABLES" | grep "log_output" | awk '{print $2}')"</th>"$'\n'"</tr>"
 # 11. Current MySQL General Log File
-AUDIT_MYSQL_GENERAL_LOG="<tr>"$'\n'"  <th>11</th>"$'\n'"  <th>MySQL General Log File</th>"$'\n'"  <th>$(mysql -e "SHOW GLOBAL VARIABLES" | grep "general_log_file" | awk '{print $2}')</th>"$'\n'"</tr>"
+AUDIT_MYSQL_GENERAL_LOG="<tr>"$'\n'"  <td>11</td>"$'\n'"  <th>MySQL General Log File</th>"$'\n'"  <th>$(mysql -e "SHOW GLOBAL VARIABLES" | grep "general_log_file" | awk '{print $2}')</th>"$'\n'"</tr>"
 # 12. Current MySQL Error Log File
-AUDIT_MYSQL_ERROR_LOG="<tr>"$'\n'"  <th>12</th>"$'\n'"  <th>MySQL Error Log File</th>"$'\n'"  <th>$(mysql -e "SHOW GLOBAL VARIABLES" | grep -P -m 1 "^log_error" | awk '{print $2}')</th>"$'\n'"</tr>"
+AUDIT_MYSQL_ERROR_LOG="<tr>"$'\n'"  <td>12</td>"$'\n'"  <th>MySQL Error Log File</th>"$'\n'"  <th>$(mysql -e "SHOW GLOBAL VARIABLES" | grep -P -m 1 "^log_error" | awk '{print $2}')</th>"$'\n'"</tr>"
 # 13. Current MySQL Slow Query Log File
-AUDIT_MYSQL_SLOW_LOG="<tr>"$'\n'"  <th>13</th>"$'\n'"  <th>MySQL Slow Query Log File</th>"$'\n'"  <th>$(mysql -e "SHOW GLOBAL VARIABLES" | grep "slow_query_log_file" | awk '{print $2}')</th>"$'\n'"</tr>"
+AUDIT_MYSQL_SLOW_LOG="<tr>"$'\n'"  <td>13</td>"$'\n'"  <th>MySQL Slow Query Log File</th>"$'\n'"  <th>$(mysql -e "SHOW GLOBAL VARIABLES" | grep "slow_query_log_file" | awk '{print $2}')</th>"$'\n'"</tr>"
 # 14. Current MySQL Relay Log File
-AUDIT_MYSQL_RELAY_LOG="<tr>"$'\n'"  <th>14</th>"$'\n'"  <th>MySQL Relay Log File</th>"$'\n'"  <th>$(mysql -e "SHOW GLOBAL VARIABLES" | grep ^relay_log | head -1 | awk '{print $2}')</th>"$'\n'"</tr>"
+AUDIT_MYSQL_RELAY_LOG="<tr>"$'\n'"  <td>14</td>"$'\n'"  <th>MySQL Relay Log File</th>"$'\n'"  <th>$(mysql -e "SHOW GLOBAL VARIABLES" | grep ^relay_log | head -1 | awk '{print $2}')</th>"$'\n'"</tr>"
 # 15. Current Innodb Max Undo Log Size
-AUDIT_MYSQL_UNDO_LOG_SIZE="<tr>"$'\n'"  <th>15</th>"$'\n'"  <th>Innodb Max Undo Log Size</th>"$'\n'"  <th>$(mysql -e "SHOW GLOBAL VARIABLES" | grep "innodb_max_undo_log_size" | awk '{print $2}')</th>"$'\n'"</tr>"
+AUDIT_MYSQL_UNDO_LOG_SIZE="<tr>"$'\n'"  <td>15</td>"$'\n'"  <th>Innodb Max Undo Log Size</th>"$'\n'"  <th>$(mysql -e "SHOW GLOBAL VARIABLES" | grep "innodb_max_undo_log_size" | awk '{print $2}')</th>"$'\n'"</tr>"
 # 16. Current MySQL Expire Logs Days
-AUDIT_MYSQL_EXPIRE_LOGS_DAYS="<tr>"$'\n'"  <th>16</th>"$'\n'"  <th>MySQL Expire Logs Days</th>"$'\n'"  <th>$(mysql -e "SHOW GLOBAL VARIABLES" | grep "expire_logs_days" | awk '{print $2}')</th>"$'\n'"</tr>"
+AUDIT_MYSQL_EXPIRE_LOGS_DAYS="<tr>"$'\n'"  <td>16</td>"$'\n'"  <th>MySQL Expire Logs Days</th>"$'\n'"  <th>$(mysql -e "SHOW GLOBAL VARIABLES" | grep "expire_logs_days" | awk '{print $2}')</th>"$'\n'"</tr>"
 # 17. Current Binlog Format
-AUDIT_MYSQL_BINLOG_FORMAT="<tr>"$'\n'"  <th>17</th>"$'\n'"  <th>Binlog Format</th>"$'\n'"  <th>$(mysql -e "SHOW GLOBAL VARIABLES" | grep "binlog_format" | awk '{print $2}')</th>"$'\n'"</tr>"
+AUDIT_MYSQL_BINLOG_FORMAT="<tr>"$'\n'"  <td>17</td>"$'\n'"  <th>Binlog Format</th>"$'\n'"  <th>$(mysql -e "SHOW GLOBAL VARIABLES" | grep "binlog_format" | awk '{print $2}')</th>"$'\n'"</tr>"
 # 18. Current Innodb Force Recovery Level
-AUDIT_MYSQL_FORCE_RECOVERY="<tr>"$'\n'"  <th>18</th>"$'\n'"  <th>Innodb Force Recovery Level</th>"$'\n'"  <th>$(mysql -e "SHOW GLOBAL VARIABLES" | grep "innodb_force_recovery" | awk '{print $2}')</th>"$'\n'"</tr>"
+AUDIT_MYSQL_FORCE_RECOVERY="<tr>"$'\n'"  <td>18</td>"$'\n'"  <th>Innodb Force Recovery Level</th>"$'\n'"  <th>$(mysql -e "SHOW GLOBAL VARIABLES" | grep "innodb_force_recovery" | awk '{print $2}')</th>"$'\n'"</tr>"
 # 19. Current Innodb Read Only Status
-AUDIT_MYSQL_READ_ONLY_STATUS="<tr>"$'\n'"  <th>19</th>"$'\n'"  <th>Innodb Read Only Status</th>"$'\n'"  <th>$(mysql -e "SHOW GLOBAL VARIABLES" | grep "innodb_read_only" | awk '{print $2}')</th>"$'\n'"</tr>"
+AUDIT_MYSQL_READ_ONLY_STATUS="<tr>"$'\n'"  <td>19</td>"$'\n'"  <th>Innodb Read Only Status</th>"$'\n'"  <th>$(mysql -e "SHOW GLOBAL VARIABLES" | grep "innodb_read_only" | awk '{print $2}')</th>"$'\n'"</tr>"
 # 20. Current Default Authentication Plugin
-AUDIT_MYSQL_AUTH_PLUGIN="<tr>"$'\n'"  <th>20</th>"$'\n'"  <th>Default Authentication Plugin</th>"$'\n'"  <th>$(mysql -e "SHOW GLOBAL VARIABLES" | grep "default_authentication_plugin" | awk '{print $2}')</th>"$'\n'"</tr>"
+AUDIT_MYSQL_AUTH_PLUGIN="<tr>"$'\n'"  <td>20</td>"$'\n'"  <th>Default Authentication Plugin</th>"$'\n'"  <th>$(mysql -e "SHOW GLOBAL VARIABLES" | grep "default_authentication_plugin" | awk '{print $2}')</th>"$'\n'"</tr>"
 # 21. Current Innodb Buffer Pool Chunk Size
-AUDIT_MYSQL_CHUNK_SIZE="<tr>"$'\n'"  <th>21</th>"$'\n'"  <th>Innodb Buffer Pool Chunk Size</th>"$'\n'"  <th>$(mysql -e "show variables like 'innodb_%';" | grep "innodb_buffer_pool_chunk_size" | awk '{print $2}')</th>"$'\n'"</tr>"
+AUDIT_MYSQL_CHUNK_SIZE="<tr>"$'\n'"  <td>21</td>"$'\n'"  <th>Innodb Buffer Pool Chunk Size</th>"$'\n'"  <th>$(mysql -e "show variables like 'innodb_%';" | grep "innodb_buffer_pool_chunk_size" | awk '{print $2}')</th>"$'\n'"</tr>"
 # 22. Current Innodb Buffer Pool Size
-AUDIT_MYSQL_BUFFER_POOL_SIZE="<tr>"$'\n'"  <th>22</th>"$'\n'"  <th>Innodb Buffer Pool Size</th>"$'\n'"  <th>$(mysql -e "show variables like 'innodb_%';" | grep "innodb_buffer_pool_size" | awk '{print $2}')</th>"$'\n'"</tr>"
+AUDIT_MYSQL_BUFFER_POOL_SIZE="<tr>"$'\n'"  <td>22</td>"$'\n'"  <th>Innodb Buffer Pool Size</th>"$'\n'"  <th>$(mysql -e "show variables like 'innodb_%';" | grep "innodb_buffer_pool_size" | awk '{print $2}')</th>"$'\n'"</tr>"
 # 23. Current Innodb Open Files
-AUDIT_MYSQL_OPEN_FILES="<tr>"$'\n'"  <th>23</th>"$'\n'"  <th>Innodb Open Files</th>"$'\n'"  <th>$(mysql -e "show variables like 'innodb_%';" | grep "innodb_open_files" | awk '{print $2}')</th>"$'\n'"</tr>"
+AUDIT_MYSQL_OPEN_FILES="<tr>"$'\n'"  <td>23</td>"$'\n'"  <th>Innodb Open Files</th>"$'\n'"  <th>$(mysql -e "show variables like 'innodb_%';" | grep "innodb_open_files" | awk '{print $2}')</th>"$'\n'"</tr>"
 # 24. Current Innodb Buffer Pool Filename
-AUDIT_MYSQL_BUFFER_POOL_FILENAME="<tr>"$'\n'"  <th>24</th>"$'\n'"  <th>Innodb Buffer Pool Filename</th>"$'\n'"  <th>$(mysql -e "show variables like 'innodb_%';" | grep "innodb_buffer_pool_filename" | awk '{print $2}')</th>"$'\n'"</tr>"
+AUDIT_MYSQL_BUFFER_POOL_FILENAME="<tr>"$'\n'"  <td>24</td>"$'\n'"  <th>Innodb Buffer Pool Filename</th>"$'\n'"  <th>$(mysql -e "show variables like 'innodb_%';" | grep "innodb_buffer_pool_filename" | awk '{print $2}')</th>"$'\n'"</tr>"
 # 25. Current Innodb Buffer Pool Dump At Shutdown
-AUDIT_MYSQL_BUFFER_POOL_DUMP="<tr>"$'\n'"  <th>25</th>"$'\n'"  <th>Innodb Buffer Pool Dump At Shutdown</th>"$'\n'"  <th>$(mysql -e "show variables like 'innodb_%';" | grep "innodb_buffer_pool_dump_at_shutdown" | awk '{print $2}')</th>"$'\n'"</tr>"
+AUDIT_MYSQL_BUFFER_POOL_DUMP="<tr>"$'\n'"  <td>25</td>"$'\n'"  <th>Innodb Buffer Pool Dump At Shutdown</th>"$'\n'"  <th>$(mysql -e "show variables like 'innodb_%';" | grep "innodb_buffer_pool_dump_at_shutdown" | awk '{print $2}')</th>"$'\n'"</tr>"
 # 26. Current Innodb Replication Delay
-AUDIT_MYSQL_REPL_DELAY="<tr>"$'\n'"  <th>26</th>"$'\n'"  <th>Innodb Replication Delay</th>"$'\n'"  <th>$(mysql -e "SHOW GLOBAL VARIABLES" | grep "innodb_replication_delay" | awk '{print $2}')</th>"$'\n'"</tr>"
+AUDIT_MYSQL_REPL_DELAY="<tr>"$'\n'"  <td>26</td>"$'\n'"  <th>Innodb Replication Delay</th>"$'\n'"  <th>$(mysql -e "SHOW GLOBAL VARIABLES" | grep "innodb_replication_delay" | awk '{print $2}')</th>"$'\n'"</tr>"
 # 27. Current Innodb Page Size
-AUDIT_MYSQL_PAGE_SIZE="<tr>"$'\n'"  <th>27</th>"$'\n'"  <th>Innodb Page Size</th>"$'\n'"  <th>$(mysql -e "SHOW GLOBAL VARIABLES" | grep "innodb_page_size" | awk '{print $2}')</th>"$'\n'"</tr>"
+AUDIT_MYSQL_PAGE_SIZE="<tr>"$'\n'"  <td>27</td>"$'\n'"  <th>Innodb Page Size</th>"$'\n'"  <th>$(mysql -e "SHOW GLOBAL VARIABLES" | grep "innodb_page_size" | awk '{print $2}')</th>"$'\n'"</tr>"
 
 ################# Redis Information #################
 

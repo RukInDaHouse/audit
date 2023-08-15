@@ -27,21 +27,22 @@ echo "Script will automatically gather the required info:"
 echo "The checklist can help you in the process of hardening your system:"
 echo "Note: it has been tested for Debian Linux Distro:"
 echo
-REPORT_TABLE_HEADER="<table>"$'\n'"<tr>"$'\n'"  <th>№</th>"$'\n'"  <th>Parametr</th>"$'\n'"  <th>Value</th>"$'\n'"</tr>"
+REPORT_TABLE_HEADER="<table>"$'\n'"<tr>"$'\n'"  <td>№</td>"$'\n'"  <td>Parametr</th>"$'\n'"  <td>Value</td>"$'\n'"</td>"
 REPORT_TABLE_FOOTER="</table>"
 AUDIT_HEADER="MySQL"
 REPORT_PAGE_HEADER="<h1>"$AUDIT_HEADER"</h1>"
-touch report.html
+touch ./report.html
 START=$(date +%s)
 AUDIT_HEADER="MySQL"
 cat > report.html << EOF
 <!DOCTYPE html>
+<link href='https://fonts.googleapis.com/css?family=Lato' rel='stylesheet'>
 <style>
     .panel {
       position: fixed;
       width: 100%;
       height: 40px;
-#     background: black;
+      background: black;
       left: 0;
       right: 0;
       bottom: 0;
@@ -92,7 +93,16 @@ cat > report.html << EOF
     }
 
     table, th, td {
-      border:1px solid black;
+      border: 1px solid var(--table, #D9D9D9); 
+      font-family: Lato;
+      font-weight: lighter;
+      padding: 10px;
+      gap: 10px;
+      text-align: center;
+    }
+
+    td {
+      font-weight: bold;
     }
 </style>
 <html>
