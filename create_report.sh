@@ -27,7 +27,7 @@ echo "Script will automatically gather the required info:"
 echo "The checklist can help you in the process of hardening your system:"
 echo "Note: it has been tested for Debian Linux Distro:"
 echo
-REPORT_TABLE_HEADER="<table>"$'\n'"<tr>"$'\n'"  <td>№</td>"$'\n'"  <td>Parametr</th>"$'\n'"  <td>Value</td>"$'\n'"</td>"
+REPORT_TABLE_HEADER="<table class="center">"
 REPORT_TABLE_FOOTER="</table>"
 AUDIT_HEADER="MySQL"
 REPORT_PAGE_HEADER="<h1>"$AUDIT_HEADER"</h1>"
@@ -38,6 +38,15 @@ cat > report.html << EOF
 <!DOCTYPE html>
 <link href='https://fonts.googleapis.com/css?family=Lato' rel='stylesheet'>
 <style>
+    body {
+      background-color: #F5F5F5;
+    }
+
+    .center {
+      margin-left: auto;
+      margin-right: auto;
+    }
+
     .panel {
       position: fixed;
       width: 100%;
@@ -95,13 +104,41 @@ cat > report.html << EOF
     table, th, td {
       border: 1px solid var(--table, #D9D9D9); 
       font-family: Lato;
-      font-weight: lighter;
+      font-style: normal;
+      font-weight: 400;
+      line-height: normal; 
       padding: 10px;
-      gap: 10px;
       text-align: center;
     }
 
+    table {
+      border-collapse: collapse;
+      margin: 30px;
+      width: 90%; 
+    }
+
     td {
+      height: 90px;
+      font-style: normal;
+      font-weight: 700;
+      line-height: normal; 
+      font-weight: bold;
+    }
+
+    tr:nth-child(even) {
+      background: var(--05-ff-00, rgba(5, 255, 0, 0.20))
+    }
+
+    td:first-child {
+      background: #F5F5F5;
+    }
+
+    h1 {
+      text-align: center;
+      font-family: Lato;
+      font-style: normal;
+      font-weight: 700;
+      line-height: normal; 
       font-weight: bold;
     }
 </style>
@@ -112,34 +149,20 @@ cat > report.html << EOF
     <body>
 $REPORT_PAGE_HEADER
 $REPORT_TABLE_HEADER
-$AUDIT_MYSQL_VERSION
-$AUDIT_MYSQL_ENGINE
-$AUDIT_MYSQL_BASEDIR
-$AUDIT_MYSQL_DATADIR
-$AUDIT_MYSQL_TMPDIR
-$AUDIT_MYSQL_PORT
-$AUDIT_MYSQL_SOCKET
-$AUDIT_MYSQL_PID_FILE
-$AUDIT_MYSQL_BIND_ADDRESS
-$AUDIT_MYSQL_LOG_OUTPUT
-$AUDIT_MYSQL_GENERAL_LOG
-$AUDIT_MYSQL_ERROR_LOG
-$AUDIT_MYSQL_SLOW_LOG
-$AUDIT_MYSQL_RELAY_LOG
-$AUDIT_MYSQL_UNDO_LOG_SIZE
-$AUDIT_MYSQL_EXPIRE_LOGS_DAYS
-$AUDIT_MYSQL_BINLOG_FORMAT
-$AUDIT_MYSQL_FORCE_RECOVERY
-$AUDIT_MYSQL_READ_ONLY_STATUS
-$AUDIT_MYSQL_AUTH_PLUGIN
-$AUDIT_MYSQL_CHUNK_SIZE
-$AUDIT_MYSQL_BUFFER_POOL_SIZE
-$AUDIT_MYSQL_OPEN_FILES
-$AUDIT_MYSQL_BUFFER_POOL_FILENAME
-$AUDIT_MYSQL_BUFFER_POOL_DUMP
-$AUDIT_MYSQL_REPL_DELAY
-$AUDIT_MYSQL_PAGE_SIZE
+$AUDIT_MYSQL_VARIABLES_FIRST_TABLE
+$AUDIT_MYSQL_VALUES_FIRST_TABLE
 $REPORT_TABLE_FOOTER
+
+$REPORT_TABLE_HEADER
+$AUDIT_MYSQL_VARIABLES_SECOND_TABLE
+$AUDIT_MYSQL_VALUES_SECOND_TABLE
+$REPORT_TABLE_FOOTER
+
+$REPORT_TABLE_HEADER
+$AUDIT_MYSQL_VARIABLES_THIRD_TABLE
+$AUDIT_MYSQL_VALUES_THIRD_TABLE
+$REPORT_TABLE_FOOTER
+
         <div class="panel"></div>
     </body>
 </html>
