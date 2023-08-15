@@ -38,8 +38,14 @@ cat > report.html << EOF
 <!DOCTYPE html>
 <link href='https://fonts.googleapis.com/css?family=Lato' rel='stylesheet'>
 <style>
-    body {
+    .darkMode {
+      background-color: #757575;
+      color: #FFF;
+    }
+
+    .lightMode {
       background-color: #F5F5F5;
+      color: #000000;
     }
 
     .buffer {
@@ -52,11 +58,24 @@ cat > report.html << EOF
       margin-right: auto;
     }
 
+    .swapMode {
+      position: fixed;
+      top: 15px;
+      right: 15px;
+      width: 50px;
+      height: 50px;
+      cursor: pointer;
+    }
+
+    .swapModeDark {
+      -webkit-filter: invert(95%);
+      filter: invert(95%);
+    }
+
     .panel {
       position: fixed;
       width: 100%;
       height: 50px;
-      background: #D9D9D9;
       left: 0;
       right: 0;
       bottom: 0;
@@ -65,7 +84,26 @@ cat > report.html << EOF
       display: flex;
       border: 1px solid #DFDFDF;
       border-bottom: none;
-      border-left: none; 
+      border-left: none;
+      border-top: none;  
+    }
+
+    .panelLightMode {
+      background: rgba(240, 240, 240, 1);
+    }
+
+    .panelDarkMode {
+      background-color: #757575;
+    }
+
+    .panelButtonLightMode {
+      background: rgba(240, 240, 240, 1);
+      color: #000000;
+    }
+
+    .panelButtonDarkMode {
+      background-color: #757575;
+      color: #FFF;
     }
 
     .logo {
@@ -93,12 +131,10 @@ cat > report.html << EOF
     .panelButton {
       display: inline-block;
       align-items: center;
-      background-color: rgba(240, 240, 240, 0.26);
       border: 1px solid #FFFFFF;
       border-bottom: none;
       border-top: none;
       box-sizing: border-box;
-      color: #000000;
       cursor: pointer;
       font-family: Lato;
       font-size: 15px;
@@ -116,8 +152,13 @@ cat > report.html << EOF
       outline: 0;
     }
 
-    .panelButton:hover {
+    .panelButtonLightMode:hover {
       background-color: #FFFFFF;
+      border-color: rgba(0, 0, 0, 0.19);
+    }
+
+    .panelButtonDarkMode:hover {
+      background-color: #444;
       border-color: rgba(0, 0, 0, 0.19);
     }
 
@@ -160,8 +201,12 @@ cat > report.html << EOF
       background: var(--05-ff-00, rgba(5, 255, 0, 0.20))
     }
 
-    td:first-child {
+    .cellLightMode {
       background: #F5F5F5;
+    }
+
+    .cellDarkMode {
+      background: #959595;
     }
 
     h1 {
@@ -177,7 +222,12 @@ cat > report.html << EOF
     <head>
         <title>Report</title>
     </head>
-    <body>
+    <body class="lightMode">
+    <div class="swapMode" onclick="myFunction()">
+      <svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" viewBox="0 0 64 62">
+        <path d="m56.6 32-7.2 7.2v10.2H39.2L32 56.6l-7.2-7.2H14.6V39.2L7.4 32l7.2-7.2V14.6h10.2L32 7.4l7.2 7.2h10.2v10.2l7.2 7.2zm-11.8 5.3c2.9-7-.4-15.1-7.5-18.1-5.4-2.2-11.6-.8-15.5 3.5 3.1-2 6.9-2.3 10.2-.9 5.6 2.3 8.3 8.8 6 14.4-2.3 5.6-8.8 8.3-14.5 6l-1.8-.9c1.4 1.5 3.1 2.7 5 3.5 7.1 2.9 15.2-.5 18.1-7.5z"/>
+      </svg>
+    </div>
 $REPORT_PAGE_HEADER
 $REPORT_TABLE_HEADER
 $AUDIT_MYSQL_VARIABLES_FIRST_TABLE
@@ -195,7 +245,7 @@ $AUDIT_MYSQL_VALUES_THIRD_TABLE
 $REPORT_TABLE_FOOTER
 
     <div class="buffer"></div>
-    <div class="panel">
+    <div class="panel panelLightMode">
       <a href="https://nixys.ru/" target="_blank">
         <div class="logo">
           <svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" id="svg2" x="0" y="0" version="1.1" viewBox="0 0 92.5 100.5">
@@ -211,17 +261,47 @@ $REPORT_TABLE_FOOTER
           </svg>
         </div>
       </a>
-      <button class="panelButton">Linux</button>
-      <button class="panelButton">System</button>
-      <button class="panelButton">Services</button>
-      <button class="panelButton">Users</button>
-      <button class="panelButton">Network</button>
-      <button class="panelButton">Nginx</button>
-      <button class="panelButton">PHP</button>
-      <button class="panelButton">MySQL</button>
-      <button class="panelButton">Redis</button>
+      <button class="panelButton panelButtonLightMode">Linux</button>
+      <button class="panelButton panelButtonLightMode">System</button>
+      <button class="panelButton panelButtonLightMode">Services</button>
+      <button class="panelButton panelButtonLightMode">Users</button>
+      <button class="panelButton panelButtonLightMode">Network</button>
+      <button class="panelButton panelButtonLightMode">Nginx</button>
+      <button class="panelButton panelButtonLightMode">PHP</button>
+      <button class="panelButton panelButtonLightMode">MySQL</button>
+      <button class="panelButton panelButtonLightMode">Redis</button>
     </div>
   </body>
+  <script>
+    function myFunction() {
+      var bodyColor = document.body;
+      bodyColor.classList.toggle("darkMode");
+      bodyColor.classList.toggle("lightMode");
+
+      var panelButtonColor = document.getElementsByClassName("panelButton");
+      for (var i = 0; i < panelButtonColor.length; i++) {
+        panelButtonColor[i].classList.toggle('panelButtonLightMode');
+        panelButtonColor[i].classList.toggle('panelButtonDarkMode');
+      }
+
+      var cellColor = document.getElementsByClassName("cellHeader");
+      for (var i = 0; i < cellColor.length; i++) {
+        cellColor[i].classList.toggle('cellLightMode');
+        cellColor[i].classList.toggle('celllDarkMode');
+      }
+
+      var panelColor = document.getElementsByClassName("panel");
+      for (var i = 0; i < panelColor.length; i++) {
+        panelColor[i].classList.toggle('panelLightMode');
+        panelColor[i].classList.toggle('panelDarkMode');
+      }
+
+      var swapColor = document.getElementsByClassName("swapMode");
+      for (var i = 0; i < swapColor.length; i++) {
+        swapColor[i].classList.toggle('swapModeDark');
+      }
+    } 
+  </script>
 </html>
 
 EOF
