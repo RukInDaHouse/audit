@@ -2,7 +2,7 @@
 #
 # sokdr
 #
-source ./audit.sh
+source ./variables.sh
 tput clear
 trap ctrl_c INT
 
