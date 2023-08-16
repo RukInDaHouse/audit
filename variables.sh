@@ -1,20 +1,29 @@
-################# Linux Information #################
-
-#01. Linux Kernel Information
-AUDIT_UNAME=$(uname -a)
-#02. Linux Distribution Information
-AUDIT_RELEASE=$(lsb_release -a)
-
 ################# System Information #################
 
+#01. Linux Distribution Information
+AUDIT_RELEASE=$(cat /etc/issue)
 #01. CPU/System Information
-AUDIT_CPUINFO=$(cat /proc/cpuinfo)
-#02. Available RAM
-AUDIT_FREE=$(free -h)
+AUDIT_CPUINFO=$(cat /proc/cpuinfo | grep "model name" | awk -F ":" '{print $2}' | head -1)
+#02. Total RAM
+AUDIT_TOTAL_MEMORY=$(free -th | grep Total | awk '{print $2}')
+#03. Used RAM
+AUDIT_USED_MEMORY=$(free -th | grep Total | awk '{print $3}')
+#04. Free RAM
+AUDIT_FREE_MEMORY=$(free -th | grep Total | awk '{print $4}')
+#05. Available RAM
+AUDIT_AVAILABLE_MEMORY=$(free -th | grep Mem | awk '{print $7}')
+#06. Swap RAM
+AUDIT_SWAP_MEMORY=$(free -th | grep Swap | awk '{print $2}')
+#06. Summary RAM
+AUDIT_RAM_USAGE_VARIABLES="<tr>"$'\n'"  <td class='cellHeader cellLightMode'>Variable</td>"$'\n'"  <th>Total Memory</th>"$'\n'"  <th>Used Memory</th>"$'\n'"  <th>Free Memory</th>"$'\n'"  <th>Available</th>"$'\n'"  <th>Swap Memory</th>"$'\n'"</tr>"
+AUDIT_RAM_USAGE_VALUES="<tr>"$'\n'"  <td class='cellHeader cellLightMode'>Value</td>"$'\n'"  <th>$AUDIT_TOTAL_MEMORY</th>"$'\n'"  <th>$AUDIT_USED_MEMORY</th>"$'\n'"  <th>$AUDIT_FREE_MEMORY</th>"$'\n'"  <th>$AUDIT_AVAILABLE_MEMORY</th>"$'\n'"  <th>$AUDIT_SWAP_MEMORY</th>"$'\n'"</tr>"
 #03. Available Disk Space"
-AUDIT_DISK_SPACE=$(df -h)
+function df_stat {
+	df -Ph | awk 'BEGIN { print "<table class=center>";print "<tr>";print "<th bgcolor=gray>MOUNT</th>";print "<th bgcolor=gray>SIZE</th>";print "<th bgcolor=gray>USED</th>"; print "<th bgcolor=gray>AVAILABLE</th>"; print "<th bgcolor=gray>USE%</th>"; print "</tr>"} NR > 1 { print "<tr><td>"$6"</td><td>"$2"</td><td>"$3"</td><td>"$4"</td><td>"$5"</td></tr>" } END { print "</table>"}' > ./tmp/df.txt
+}
+AUDIT_DISK_SPACE=""
 #04. RAID Info
-AUDIT_MDSTAT=$(cat /proc/mdstat)untitled:Untitled-1
+AUDIT_MDSTAT=$(cat /proc/mdstat)
 #05. LVM Info
 AUDIT_LVM_AVAILABILITY="0"
 AUDIT_LVM_AVAILABILITY="1"
@@ -32,7 +41,7 @@ AUDIT_SERVICES=$(service --status-all |grep "+")
 #02. Check Running Processes
 AUDIT_PROCESSES=$(ps -a)
 #03. List All Packages Installed
-AUDIT_PACKAGES=$(apt-cache pkgnames)
+#AUDIT_PACKAGES=$(apt-cache pkgnames)
 #04. Check for Broken Dependencies
 AUDIT_BROKEN_DEPENDENCIES=$(apt-get check)
 #05. Check Upgradable Packages
