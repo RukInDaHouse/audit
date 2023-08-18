@@ -1,1 +1,4 @@
 # audit
+mdadm
+pciutils
+route

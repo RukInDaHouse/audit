@@ -2,57 +2,86 @@
 
 #01. Linux Distribution Information
 AUDIT_RELEASE=$(cat /etc/issue)
-#01. CPU/System Information
+#02. CPU/System Information
 AUDIT_CPUINFO=$(cat /proc/cpuinfo | grep "model name" | awk -F ":" '{print $2}' | head -1)
-#02. Total RAM
+#03. Total RAM
 AUDIT_TOTAL_MEMORY=$(free -th | grep Total | awk '{print $2}')
-#03. Used RAM
+#04. Used RAM
 AUDIT_USED_MEMORY=$(free -th | grep Total | awk '{print $3}')
-#04. Free RAM
+#05. Free RAM
 AUDIT_FREE_MEMORY=$(free -th | grep Total | awk '{print $4}')
-#05. Available RAM
+#06. Available RAM
 AUDIT_AVAILABLE_MEMORY=$(free -th | grep Mem | awk '{print $7}')
-#06. Swap RAM
+#07. Swap RAM
 AUDIT_SWAP_MEMORY=$(free -th | grep Swap | awk '{print $2}')
-#06. Summary RAM
+#08. Summary RAM
 AUDIT_RAM_USAGE_VARIABLES="<tr>"$'\n'"  <td class='cellHeader cellLightMode'>Variable</td>"$'\n'"  <th>Total Memory</th>"$'\n'"  <th>Used Memory</th>"$'\n'"  <th>Free Memory</th>"$'\n'"  <th>Available</th>"$'\n'"  <th>Swap Memory</th>"$'\n'"</tr>"
 AUDIT_RAM_USAGE_VALUES="<tr>"$'\n'"  <td class='cellHeader cellLightMode'>Value</td>"$'\n'"  <th>$AUDIT_TOTAL_MEMORY</th>"$'\n'"  <th>$AUDIT_USED_MEMORY</th>"$'\n'"  <th>$AUDIT_FREE_MEMORY</th>"$'\n'"  <th>$AUDIT_AVAILABLE_MEMORY</th>"$'\n'"  <th>$AUDIT_SWAP_MEMORY</th>"$'\n'"</tr>"
-#03. Available Disk Space"
+#09. Summary Info Memory"
 function df_stat {
-	df -Ph | awk 'BEGIN { print "<table class=center>";print "<tr>";print "<th bgcolor=gray>MOUNT</th>";print "<th bgcolor=gray>SIZE</th>";print "<th bgcolor=gray>USED</th>"; print "<th bgcolor=gray>AVAILABLE</th>"; print "<th bgcolor=gray>USE%</th>"; print "</tr>"} NR > 1 { print "<tr><td>"$6"</td><td>"$2"</td><td>"$3"</td><td>"$4"</td><td>"$5"</td></tr>" } END { print "</table>"}' > ./tmp/df.txt
+	df -Ph | awk 'BEGIN { print "<table class=center>";print "<tr>";print "<td bgcolor=gray>MOUNT</td>";print "<td bgcolor=gray>SIZE</td>";print "<td bgcolor=gray>USED</td>"; print "<td bgcolor=gray>AVAILABLE</td>"; print "<td bgcolor=gray>USE%</td>"; print "</tr>"} NR > 1 { print "<tr><th>"$6"</th><th>"$2"</th><th>"$3"</th><th>"$4"</th><th>"$5"</th></tr>" } END { print "</table>"}' > ./tmp/df.txt
 }
+df_stat
 AUDIT_DISK_SPACE=""
-#04. RAID Info
-AUDIT_MDSTAT=$(cat /proc/mdstat)
-#05. LVM Info
-AUDIT_LVM_AVAILABILITY="0"
-AUDIT_LVM_AVAILABILITY="1"
-AUDIT_PVS="$pvs"
-AUDIT_VGS="$vgs"
-AUDIT_LVS="$lvs"
+#10. Harware RAID Info
+AUDIT_HARWARE_RAID=$(lspci | grep -i raid)
+#11. Software RAID Info
+AUDIT_SOFTWARE_RAID=$(cat /proc/mdstat | grep md)
+#12. Software RAID Info
+function disk_stat {
+	LVM_INSTALLED=$(apt-cache pkgnames | grep -x "lvm2")
+	if [ -z "$LVM_INSTALLED" ]; then
+		AUDIT_LVM_AVAILABILITY="No"
+		AUDIT_PVS="N/A"
+		AUDIT_VGS="N/A"
+		AUDIT_LVS="N/A"
+	else
+		AUDIT_LVM_AVAILABILITY="Yes"
+		AUDIT_PVS="$(pvs)"
+		AUDIT_VGS="$(vgs)"
+		AUDIT_LVS="$(lvs)"
+	fi
+	AUDIT_DISK_INFO_VALUES="<tr>"$'\n'"  <td class='cellHeader cellLightMode'>Value</td>"$'\n'"  <th>$AUDIT_HARWARE_RAID</th>"$'\n'"  <th>$AUDIT_SOFTWARE_RAID</th>"$'\n'"  <th>$AUDIT_LVM_AVAILABILITY</th>"$'\n'"  <th>$AUDIT_PVS</th>"$'\n'"  <th>$AUDIT_VGS</th>"$'\n'"  <th>$AUDIT_LVS</th>"$'\n'"</tr>"
+}
+disk_stat
+AUDIT_DISK_INFO_VARIABLES="<tr>"$'\n'"  <td class='cellHeader cellLightMode'>Variable</td>"$'\n'"  <th>Harware RAID Info</th>"$'\n'"  <th>Software RAID Info</th>"$'\n'"  <th>LVM availability</th>"$'\n'"  <th>PVS</th>"$'\n'"  <th>VGS</th>"$'\n'"  <th>LVS</th>"$'\n'"</tr>"
 
-#06. Network Interfaces
-AUDIT_NETWORK_INTERFACES=$(ifconfig -a)
+#13. Network Interfaces
+AUDIT_NETWORK=""
+function network_stat {
+	ip -o link show | awk 'BEGIN {print "<table class=center>"; print "<tr>"; print "<td>Interfaces</td>"} NR > 0 { print "<th>"$2"</th>"; } END { print "</tr>"}' > ./tmp/network.txt
+	ip -4 addr | grep inet | awk 'BEGIN { print "<tr>"; print "<td>IPv4</td>"} NR > 0 { print "<th>"$2"</th>"; } END { print "</th>"}' >> ./tmp/network.txt
+	ip -6 addr | grep inet | awk 'BEGIN { print "<tr>"; print "<td>IPv6</td>"} NR > 0 { print "<th>"$2"</th>"; } END { print "</th>"; print "</table>"}' >> ./tmp/network.txt
+}
+network_stat
 
 ################# Services Information #################
 
 #01. Running Services
-AUDIT_SERVICES=$(service --status-all |grep "+")
+AUDIT_SERVICES=""
+function services_stat {
+	service --status-all | grep "+" | awk 'BEGIN { print "<table class=center>"; print "<tr>"; print "<td>Running Processes</td>"; print "<th>"} NR > 0 { print $4"<br>"; } END { print "</th>"; print "</tr>"}' > ./tmp/service.txt
+	service --status-all | grep "-" | awk 'BEGIN { print "<tr>"; print "<td>Sleeping Processes</td>";} NR > 0 { print "</th>"; print "</tr>" }' >> ./tmp/service.txt
+	apt list -a --upgradeable | awk 'BEGIN { print "<tr>"; print "<td>Upgradeable Packages</td>"; print "<th>"} NR > 1 { printf $1; printf $2" "; print $3" "; } END { print "</th>"; print "</tr>"; print "</table>"}' >> ./tmp/service.txt
+}
+services_stat
 #02. Check Running Processes
-AUDIT_PROCESSES=$(ps -a)
-#03. List All Packages Installed
-#AUDIT_PACKAGES=$(apt-cache pkgnames)
+AUDIT_PROCESSES=""
+function ps_stat {
+	ps -eo pid,ppid,%mem,%cpu,command --sort=-%cpu | awk 'BEGIN { print "<table class=center>";print "<tr>";print "<th bgcolor=gray>PID</th>";print "<th bgcolor=gray>MEM(%)</th>";print "<th bgcolor=gray>CPU(%)</th>"; print "<th bgcolor=gray>Command</th>"; print "</tr>"} NR > 1 { print "<tr><td>"$1"</td><td>"$3"</td><td>"$4"</td><td>"$5"</td></tr>" } END { print "</table>"}' > ./tmp/ps.txt
+}
+ps_stat
 #04. Check for Broken Dependencies
-AUDIT_BROKEN_DEPENDENCIES=$(apt-get check)
-#05. Check Upgradable Packages
-AUDIT_UPGRADABLE_PACKAGES=$(apt list --upgradeable)
-#06. Check your Source List File
-AUDIT_SOURCE_LIST=$(cat /etc/apt/sources.list)
+#AUDIT_BROKEN_DEPENDENCIES=$(apt-get check)
 
 ################# Users Information #################
 
 #01. Current Logged In Users
-AUDIT_LOGGED_USERS=$(w)
+AUDIT_LOGGED_USERS=""
+function logged_users {
+	w | awk 'BEGIN { print "<table class=center>";print "<tr>";print "<td bgcolor=gray>USER</td>";print "<td bgcolor=gray>FROM</td>";print "<td bgcolor=gray>LOGIN@</td>"; print "<td bgcolor=gray>WHAT</td>"; print "</tr>"} NR > 2 { print "<tr><th>"$1"</th><th>"$3"</th><th>"$4"</th><th>"$8 $9"</th></tr>" } END { print "</table>"}'
+}
+logged_users
 #02. List User Names
 AUDIT_USER_NAMES=$(cut -d: -f1 /etc/passwd)
 #03. Check for Null Passwords
@@ -62,14 +91,21 @@ AUDIT_PASSWORD_POLICES=$(cat /etc/pam.d/common-password)
 
 ################# Network Information #################
 
-#01. Network Parameters
-AUDIT_SYSCTL=$(/etc/sysctl.conf)
-#02. Active Internet Connections and Open Ports
-AUDIT_OPEN_PORTS=$(netstat -lnap | grep LISTEN | grep -v LISTENING | awk '{print "|"$1"|"$4"|"$7"|"}')
+
+#01. Active Internet Connections and Open Ports
+AUDIT_OPEN_PORTS=""
+function ports_stat {
+	netstat -tulpn | awk 'BEGIN { print "<table class=center>";print "<tr>";print "<td bgcolor=gray>Protocol</td>";print "<td bgcolor=gray>Local Address</td>";print "<td bgcolor=gray>Foreign Address</td>"; print "<td bgcolor=gray>State</td>"; print "<td bgcolor=gray>PID/Program name</td>"; print "</tr>"} NR > 2 { print "<tr><th>"$1"</th><th>"$4"</th><th>"$5"</th><th>"$6"</th><th>"$7"</th></tr>" } END { print "</table>"}' > ./tmp/proto.txt
+}
+ports_stat
 #03. IPtable Information
-AUDIT_IPTABLES=$(iptables -L -n -v)
+#AUDIT_IPTABLES=$(iptables -L -n -v)
 #04. IP Routing Table
-AUDIT_ROUTE=$(route -n | awk '{print "|"$1"|"$2"|"$3"|"$4"|"$5"|"$6"|"$7"|"$8"|"}')
+AUDIT_ROUTE=""
+function route_stat {
+	route -n | awk 'BEGIN { print "<table class=center>";print "<tr>";print "<td bgcolor=gray>Destination</td>";print "<td bgcolor=gray>Gateway</td>";print "<td bgcolor=gray>Genmask</td>"; print "<td bgcolor=gray>Flags</td>"; print "<td bgcolor=gray>Use</td>"; print "<td bgcolor=gray>Iface</td>"; print "</tr>"} NR > 2 { print "<tr><th>"$1"</th><th>"$2"</th><th>"$3"</th><th>"$4"</th><th>"$7"</th><th>"$8"</th></tr>" } END { print "</table>"}' > ./tmp/route.txt
+}
+route_stat
 #05. TCP wrappers
 AUDIT_ALLOW_HOSTS=$(cat /etc/hosts.allow)
 AUDIT_DENY_HOSTS=$(cat /etc/hosts.deny)
